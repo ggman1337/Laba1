@@ -53,7 +53,7 @@ namespace TestProject1
         [TestCase("avava")]
         [TestCase("FF")]
         [TestCase("dgh $$ ## $$ hgd")]
-        [TestCase("Racecar")]
+        [TestCase("Racecar1")]
         public void TestOfPalindromePositive(string check)
         {
             Assert.That(Testing.IsPalindrome(check), Is.True);
