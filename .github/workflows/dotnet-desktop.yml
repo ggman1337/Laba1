@@ -1,0 +1,45 @@
+name: Lab Work Tests and Debug
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [Debug]
+
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: Laba1.sln
+      Test_Project_Path: TestProjectForLaba1/TestProjectForLaba1.csproj
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    # - name: Restore NuGet packages
+    #   run: nuget restore ${{ env.Solution_Name }}
+
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.Solution_Name }}
+
+    - name: Build the solution
+      run: msbuild ${{ env.Solution_Name }} /p:Configuration=${{ matrix.configuration }} /p:Platform="Any CPU"
+
+    - name: Execute unit tests
+      run: dotnet test ${{ env.Test_Project_Path }} /p:Configuration=${{ matrix.configuration }} /p:Platform="Any CPU"
